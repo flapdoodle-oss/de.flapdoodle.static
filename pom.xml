@@ -25,9 +25,9 @@
         </developer>
     </developers>
     <scm>
-        <connection>scm:git:git://github.com/flapdoodle-oss/de.flapdoodle.static.git</connection>
-        <developerConnection>scm:git:ssh://github.com:flapdoodle-oss/de.flapdoodle.static.git</developerConnection>
-        <url>http://github.com/flapdoodle-oss/de.flapdoodle.static/tree/main</url>
+        <connection>scm:git:git@github.com:flapdoodle-oss/de.flapdoodle.static.git</connection>
+        <developerConnection>scm:git:git@github.com:flapdoodle-oss/de.flapdoodle.static.git</developerConnection>
+        <url>git@github.com:flapdoodle-oss/de.flapdoodle.static/tree/main</url>
     </scm>
 
     <distributionManagement>
