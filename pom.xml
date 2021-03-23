@@ -1,10 +1,9 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+<project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
     <groupId>de.flapdoodle.static</groupId>
     <artifactId>de.flapdoodle.static</artifactId>
-    <version>1.0.0-SNAPSHOT</version>
+    <version>1.0.0</version>
     <packaging>jar</packaging>
 
     <name>de.flapdoodle.static</name>
@@ -28,7 +27,8 @@
         <connection>scm:git:git@github.com:flapdoodle-oss/de.flapdoodle.static.git</connection>
         <developerConnection>scm:git:git@github.com:flapdoodle-oss/de.flapdoodle.static.git</developerConnection>
         <url>git@github.com:flapdoodle-oss/de.flapdoodle.static/tree/main</url>
-    </scm>
+      <tag>de.flapdoodle.static-1.0.0</tag>
+  </scm>
 
     <distributionManagement>
         <snapshotRepository>
