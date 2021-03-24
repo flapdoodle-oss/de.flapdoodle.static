@@ -1,4 +1,4 @@
-package de.flapdoodle.static.io
+package de.flapdoodle.statik.io
 
 import java.nio.file.attribute.FileTime
 import java.time.Instant

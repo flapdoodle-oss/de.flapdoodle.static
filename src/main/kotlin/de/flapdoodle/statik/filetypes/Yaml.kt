@@ -1,4 +1,4 @@
-package de.flapdoodle.static.filetypes
+package de.flapdoodle.statik.filetypes
 
 import java.util.*
 import org.yaml.snakeyaml.Yaml as WRAPPED

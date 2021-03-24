@@ -1,4 +1,4 @@
-package de.flapdoodle.static.io
+package de.flapdoodle.statik.io
 
 import org.assertj.core.api.Assertions.assertThat
 import org.junit.jupiter.api.Test

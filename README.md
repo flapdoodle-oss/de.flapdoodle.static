@@ -2,6 +2,6 @@
 
 We are a github organisation. You are invited to participate.
 
-# de.flapdoodle.static
+# de.flapdoodle.statik
 
 static site generator (second edition)

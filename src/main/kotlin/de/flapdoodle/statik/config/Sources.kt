@@ -1,6 +1,6 @@
-package de.flapdoodle.static.config
+package de.flapdoodle.statik.config
 
-import de.flapdoodle.static.filetypes.Tree
+import de.flapdoodle.statik.filetypes.Tree
 
 data class Sources(
     val sources: List<Source>

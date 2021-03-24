@@ -1,7 +1,7 @@
-package de.flapdoodle.static.config
+package de.flapdoodle.statik.config
 
-import de.flapdoodle.static.filetypes.Toml
-import de.flapdoodle.static.io.readResource
+import de.flapdoodle.statik.filetypes.Toml
+import de.flapdoodle.statik.io.readResource
 import org.junit.jupiter.api.Test
 
 private class ConfigTest {

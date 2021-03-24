@@ -1,6 +1,6 @@
-package de.flapdoodle.static.filetypes
+package de.flapdoodle.statik.filetypes
 
-import de.flapdoodle.static.io.readResource
+import de.flapdoodle.statik.io.readResource
 import org.junit.jupiter.api.Test
 
 private class YamlTest {

@@ -1,8 +1,6 @@
-package de.flapdoodle.static.filetypes
+package de.flapdoodle.statik.filetypes
 
 import kotlin.reflect.KClass
-import kotlin.reflect.cast
-import kotlin.reflect.safeCast
 
 sealed class Tree {
     data class Node(val children: Map<String, Tree>): Tree() {

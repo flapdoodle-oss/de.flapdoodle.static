@@ -1,4 +1,4 @@
-package de.flapdoodle.static.filetypes
+package de.flapdoodle.statik.filetypes
 
 import com.moandjiezana.toml.Toml as WRAPPED
 

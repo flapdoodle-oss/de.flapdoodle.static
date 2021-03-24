@@ -1,7 +1,6 @@
-package de.flapdoodle.static.config
+package de.flapdoodle.statik.config
 
-import de.flapdoodle.static.filetypes.Tree
-import java.lang.IllegalArgumentException
+import de.flapdoodle.statik.filetypes.Tree
 
 data class Source(
     val id: String,

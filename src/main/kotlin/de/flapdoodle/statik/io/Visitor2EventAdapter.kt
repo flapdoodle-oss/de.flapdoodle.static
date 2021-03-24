@@ -1,4 +1,4 @@
-package de.flapdoodle.static.io
+package de.flapdoodle.statik.io
 
 import java.io.IOException
 import java.nio.file.FileVisitResult

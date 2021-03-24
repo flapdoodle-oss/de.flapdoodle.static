@@ -6,7 +6,7 @@
     <version>1.0.1-SNAPSHOT</version>
     <packaging>jar</packaging>
 
-    <name>de.flapdoodle.static</name>
+    <name>de.flapdoodle.statik</name>
     <description>static site generator (second edition)</description>
     <url>http://github.com/flapdoodle-oss/de.flapdoodle.static</url>
     <licenses>

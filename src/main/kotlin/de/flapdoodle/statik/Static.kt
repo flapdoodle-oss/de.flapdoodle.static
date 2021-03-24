@@ -1,4 +1,4 @@
-package de.flapdoodle.static
+package de.flapdoodle.statik
 
 import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.context
