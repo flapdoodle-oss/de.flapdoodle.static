@@ -1,7 +1,5 @@
 package de.flapdoodle.static.filetypes
 
-import kotlin.reflect.KClass
-import kotlin.reflect.cast
 import com.moandjiezana.toml.Toml as WRAPPED
 
 object Toml {
@@ -22,7 +20,7 @@ object Toml {
         return Tree.Node(children)
     }
 
-    private fun <T> asArray(value: List<T>): Tree.Array<T> {
-        return Tree.Array(value)
+    private fun <T> asArray(value: List<T>): Tree.Values<T> {
+        return Tree.Values(value)
     }
 }

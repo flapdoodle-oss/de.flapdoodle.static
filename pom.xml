@@ -264,6 +264,12 @@
             </exclusions>
         </dependency>
 
+        <!-- yaml parser -->
+        <dependency>
+            <groupId>org.yaml</groupId>
+            <artifactId>snakeyaml</artifactId>
+            <version>1.28</version>
+        </dependency>
         <!-- toml parser -->
         <dependency>
             <groupId>com.moandjiezana.toml</groupId>

@@ -16,7 +16,9 @@ object Resources {
         path: String,
         map: (ByteArray) -> D
     ): D {
-        val bytes = javaClass.getResourceAsStream(path).readBytes()
+        val stream = javaClass.getResourceAsStream(path)
+        require(stream!=null) { "could not find resource $javaClass->$path"}
+        val bytes = stream.readBytes()
         return map(bytes)
     }
 }
