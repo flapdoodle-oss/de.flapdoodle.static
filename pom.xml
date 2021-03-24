@@ -277,6 +277,11 @@
             <version>0.7.2</version>
         </dependency>
 
+<!--        <dependency>-->
+<!--            <groupId>de.flapdoodle.pattern</groupId>-->
+<!--            <artifactId>de.flapdoodle.pattern</artifactId>-->
+<!--            <version>1.0.0</version>-->
+<!--        </dependency>-->
 
     </dependencies>
 </project>

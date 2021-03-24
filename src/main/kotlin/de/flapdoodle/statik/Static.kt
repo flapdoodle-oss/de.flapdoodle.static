@@ -5,6 +5,10 @@ import com.github.ajalt.clikt.core.context
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.validate
 import com.github.ajalt.clikt.parameters.types.path
+import de.flapdoodle.statik.config.Config
+import de.flapdoodle.statik.pipeline.Direct
+import java.nio.charset.Charset
+import java.nio.file.Files
 
 object Static {
 
@@ -31,7 +35,7 @@ object Static {
         }
 
         override fun run() {
-            TODO("Not yet implemented")
+            Direct().process(Config.parse(config))
         }
     }
     
