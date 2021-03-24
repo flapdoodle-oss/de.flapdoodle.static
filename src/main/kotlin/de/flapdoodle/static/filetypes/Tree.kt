@@ -2,6 +2,7 @@ package de.flapdoodle.static.filetypes
 
 import kotlin.reflect.KClass
 import kotlin.reflect.cast
+import kotlin.reflect.safeCast
 
 sealed class Tree {
     data class Node(val children: Map<String, Tree>): Tree() {
@@ -13,7 +14,7 @@ sealed class Tree {
             val value = children[key]
             if (value!=null) {
                 if (type.isInstance(value)) {
-                    return type.cast(value)
+                    return type.java.cast(value)
                 } else {
                     throw IllegalArgumentException("type mismatch: $value != $type")
                 }

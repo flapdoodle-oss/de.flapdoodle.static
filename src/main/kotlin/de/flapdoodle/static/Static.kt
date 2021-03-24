@@ -14,12 +14,12 @@ object Static {
                 allowInterspersedArgs = false
             }
         }
-        val source by argument("source").path(
+        val config by argument("config").path(
             mustExist = true,
-            canBeFile = false,
-            canBeDir = true
+            canBeFile = true,
+            canBeDir = false
         ).validate {
-            require(it.toFile().isDirectory) { "is not a directory"}
+            require(it.toFile().isFile) { "is not a file"}
         }
 
         val destination by argument("destination").path(
