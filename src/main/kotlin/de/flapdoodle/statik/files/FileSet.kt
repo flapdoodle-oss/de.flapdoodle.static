@@ -1,3 +1,9 @@
 package de.flapdoodle.statik.files
 
-data class FileSet(val id: String, val nodes: List<Reference>)
+import de.flapdoodle.statik.config.SourceType
+
+data class FileSet(
+    val id: String,
+    val type: SourceType,
+    val nodes: List<Reference>
+)

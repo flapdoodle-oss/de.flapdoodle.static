@@ -1,5 +1,7 @@
-package de.flapdoodle.statik.files
+package de.flapdoodle.statik.documents
 
+import de.flapdoodle.statik.files.ContentType
+import de.flapdoodle.statik.files.Reference
 import de.flapdoodle.statik.filetypes.Attributes
 
 data class Document(

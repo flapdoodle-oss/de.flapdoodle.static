@@ -9,9 +9,9 @@ import java.nio.file.Path
 
 class CollectFileSet(
     val basePath: Path,
-    val config: Source
+    val source: Source
 ) : OnFileTreeEvent {
-    private var pathPatterns = PathPattern(config.paths)
+    private var pathPatterns = PathPattern(source.paths)
 
     private var nodes = emptyList<Reference>()
 
@@ -31,11 +31,14 @@ class CollectFileSet(
                     nodes = nodes + Reference.SymLink(event.path, event.destination, event.lastModified, Attributes.of(match))
                 }
             }
+            else -> {
+                // skip
+            }
         }
         return OnFileTreeEvent.Action.Continue
     }
 
     fun fileSet(): FileSet {
-        return FileSet(config.id, nodes)
+        return FileSet(source.id, source.type, nodes)
     }
 }
