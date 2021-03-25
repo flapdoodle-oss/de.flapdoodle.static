@@ -8,6 +8,12 @@ sealed class Attributes {
             return children.keys
         }
 
+        fun nodeKeys(): Set<String> {
+            return children
+                .filter { it.value is Attributes.Node }
+                .keys
+        }
+
         fun <T: Attributes> find(key: String, type: KClass<T>): T? {
             val value = children[key]
             if (value!=null) {

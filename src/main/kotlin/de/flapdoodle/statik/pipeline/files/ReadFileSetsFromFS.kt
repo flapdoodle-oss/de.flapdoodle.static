@@ -9,9 +9,7 @@ class ReadFileSetsFromFS : ReadFileSets {
     override fun read(sources: Sources): List<FileSet> {
         return sources.sources.map { source ->
             val collector = CollectFileSet(sources.basePath, source)
-            source.paths.forEach { path ->
-                IO.scan(sources.basePath, collector)
-            }
+            IO.scan(sources.basePath, collector)
             collector.fileSet()
         }
     }

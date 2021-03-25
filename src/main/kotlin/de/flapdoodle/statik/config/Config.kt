@@ -1,20 +1,24 @@
 package de.flapdoodle.statik.config
 
-import de.flapdoodle.statik.filetypes.Toml
 import de.flapdoodle.statik.filetypes.Attributes
+import de.flapdoodle.statik.filetypes.Toml
 import de.flapdoodle.statik.filetypes.Yaml
 import java.nio.file.Files
 import java.nio.file.Path
 
 data class Config(
-    val sources: Sources
+    val sources: Sources,
+    val pages: Pages
 ) {
 
     companion object {
         fun parse(basePath: Path, source: Attributes.Node): Config {
             val sourceConfig = source.get("sources", Attributes.Node::class)
+            val pageConfig = source.get("pages", Attributes.Node::class)
+            
             return Config(
-                sources = Sources.parse(basePath, sourceConfig)
+                sources = Sources.parse(basePath, sourceConfig),
+                pages = Pages.parse(pageConfig)
             )
         }
 

@@ -12,7 +12,7 @@ data class Sources(
         fun parse(basePath: Path, root: Attributes.Node): Sources {
             return Sources(
                 basePath = basePath,
-                sources = root.keys().map {
+                sources = root.nodeKeys().map {
                     Source.parse(it, root.get(it, Attributes.Node::class))
                 }
             )

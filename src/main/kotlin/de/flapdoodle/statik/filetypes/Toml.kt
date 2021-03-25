@@ -13,6 +13,8 @@ object Toml {
             it.key to when (value) {
                 is WRAPPED -> asTree(value)
                 is List<*> -> asArray(value)
+                is String -> asArray(listOf(value))
+                is Long -> asArray(listOf(value))
                 else -> throw IllegalArgumentException("not implemented: ${value.javaClass}")
             }
         }.toMap()

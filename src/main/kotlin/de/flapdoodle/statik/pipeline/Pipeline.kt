@@ -7,9 +7,9 @@ import de.flapdoodle.statik.pipeline.documents.DocumentSetsFromFileSetsMapper
 import de.flapdoodle.statik.pipeline.files.ReadFileSets
 import de.flapdoodle.statik.pipeline.files.ReadFileSetsFromFS
 
-class Direct(
-    val readFileSets: ReadFileSets = ReadFileSetsFromFS(),
-    val documentsDocumentSetsFromFileSets: DocumentSetsFromFileSets = DocumentSetsFromFileSetsMapper(
+class Pipeline(
+    private val readFileSets: ReadFileSets = ReadFileSetsFromFS(),
+    private val documentsDocumentSetsFromFileSets: DocumentSetsFromFileSets = DocumentSetsFromFileSetsMapper(
         documentFromReference = MetaInHeadDocumentFromReferenceParser
     )
 ) {
@@ -24,5 +24,7 @@ class Direct(
         println("--------------")
         println("documents:")
         documents.forEach { println(it) }
+
+        
     }
 }
