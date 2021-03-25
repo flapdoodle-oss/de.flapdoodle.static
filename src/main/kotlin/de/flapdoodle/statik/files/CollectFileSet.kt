@@ -1,6 +1,7 @@
 package de.flapdoodle.statik.files
 
 import de.flapdoodle.statik.config.Source
+import de.flapdoodle.statik.filetypes.Attributes
 import de.flapdoodle.statik.io.FileTreeEvent
 import de.flapdoodle.statik.io.OnFileTreeEvent
 import de.flapdoodle.statik.io.PathPattern
@@ -12,7 +13,7 @@ class CollectFileSet(
 ) : OnFileTreeEvent {
     private var pathPatterns = PathPattern(config.paths)
 
-    private var blobs = emptyList<Blob>()
+    private var nodes = emptyList<Reference>()
 
     override fun onEvent(event: FileTreeEvent): OnFileTreeEvent.Action {
         val relativePath = basePath.relativize(event.path)
@@ -21,13 +22,13 @@ class CollectFileSet(
             is FileTreeEvent.File -> {
                 val match = pathPatterns.match(relativePath)
                 if (match!=null) {
-                    blobs = blobs + Blob.File(event.path, event.size, event.lastModified, match)
+                    nodes = nodes + Reference.File(event.path, event.size, event.lastModified, Attributes.of(match))
                 }
             }
             is FileTreeEvent.SymLink -> {
                 val match = pathPatterns.match(relativePath)
                 if (match!=null) {
-                    blobs = blobs + Blob.SymLink(event.path, event.destination, event.lastModified, match)
+                    nodes = nodes + Reference.SymLink(event.path, event.destination, event.lastModified, Attributes.of(match))
                 }
             }
         }
@@ -35,6 +36,6 @@ class CollectFileSet(
     }
 
     fun fileSet(): FileSet {
-        return FileSet(config.id, blobs)
+        return FileSet(config.id, nodes)
     }
 }

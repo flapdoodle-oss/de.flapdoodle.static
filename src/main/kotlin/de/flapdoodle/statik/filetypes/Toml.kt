@@ -3,11 +3,11 @@ package de.flapdoodle.statik.filetypes
 import com.moandjiezana.toml.Toml as WRAPPED
 
 object Toml {
-    fun asTree(raw: String): Tree.Node {
+    fun asTree(raw: String): Attributes.Node {
         return asTree(WRAPPED().read(raw))
     }
 
-    private fun asTree(toml: WRAPPED): Tree.Node {
+    private fun asTree(toml: WRAPPED): Attributes.Node {
         val children = toml.entrySet().map {
             val value = it.value
             it.key to when (value) {
@@ -17,10 +17,10 @@ object Toml {
             }
         }.toMap()
 
-        return Tree.Node(children)
+        return Attributes.Node(children)
     }
 
-    private fun <T> asArray(value: List<T>): Tree.Values<T> {
-        return Tree.Values(value)
+    private fun <T> asArray(value: List<T>): Attributes.Values<T> {
+        return Attributes.Values(value)
     }
 }

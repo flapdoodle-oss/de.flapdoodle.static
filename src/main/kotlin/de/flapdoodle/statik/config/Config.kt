@@ -1,9 +1,8 @@
 package de.flapdoodle.statik.config
 
 import de.flapdoodle.statik.filetypes.Toml
-import de.flapdoodle.statik.filetypes.Tree
+import de.flapdoodle.statik.filetypes.Attributes
 import de.flapdoodle.statik.filetypes.Yaml
-import java.nio.charset.Charset
 import java.nio.file.Files
 import java.nio.file.Path
 
@@ -12,8 +11,8 @@ data class Config(
 ) {
 
     companion object {
-        fun parse(basePath: Path, source: Tree.Node): Config {
-            val sourceConfig = source.get("sources", Tree.Node::class)
+        fun parse(basePath: Path, source: Attributes.Node): Config {
+            val sourceConfig = source.get("sources", Attributes.Node::class)
             return Config(
                 sources = Sources.parse(basePath, sourceConfig)
             )

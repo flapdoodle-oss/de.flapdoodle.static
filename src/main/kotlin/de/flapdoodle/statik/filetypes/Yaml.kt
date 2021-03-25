@@ -4,12 +4,12 @@ import java.util.*
 import org.yaml.snakeyaml.Yaml as WRAPPED
 
 object Yaml {
-    fun asTree(raw: String): Tree.Node {
+    fun asTree(raw: String): Attributes.Node {
         val wrapped = WRAPPED().load<Map<String,Any>>(raw) ?: emptyMap()
         return asTree(wrapped)
     }
 
-    private fun asTree(yaml: Map<String, Any>): Tree.Node {
+    private fun asTree(yaml: Map<String, Any>): Attributes.Node {
         val children = yaml.map {
             val value: Any = it.value
             it.key to when (value) {
@@ -20,11 +20,11 @@ object Yaml {
             }
         }.toMap()
 
-        return Tree.Node(children)
+        return Attributes.Node(children)
     }
 
-    private fun <T> asArray(value: List<T>): Tree.Values<T> {
-        return Tree.Values(value)
+    private fun <T> asArray(value: List<T>): Attributes.Values<T> {
+        return Attributes.Values(value)
     }
 
 }

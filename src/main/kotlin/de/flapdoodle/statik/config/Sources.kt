@@ -1,6 +1,6 @@
 package de.flapdoodle.statik.config
 
-import de.flapdoodle.statik.filetypes.Tree
+import de.flapdoodle.statik.filetypes.Attributes
 import java.nio.file.Path
 
 data class Sources(
@@ -9,11 +9,11 @@ data class Sources(
 ) {
 
     companion object {
-        fun parse(basePath: Path, root: Tree.Node): Sources {
+        fun parse(basePath: Path, root: Attributes.Node): Sources {
             return Sources(
                 basePath = basePath,
                 sources = root.keys().map {
-                    Source.parse(it, root.get(it, Tree.Node::class))
+                    Source.parse(it, root.get(it, Attributes.Node::class))
                 }
             )
         }

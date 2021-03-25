@@ -2,13 +2,13 @@ package de.flapdoodle.statik.filetypes
 
 import kotlin.reflect.KClass
 
-sealed class Tree {
-    data class Node(val children: Map<String, Tree>): Tree() {
+sealed class Attributes {
+    data class Node(val children: Map<String, Attributes>): Attributes() {
         fun keys(): Set<String> {
             return children.keys
         }
 
-        fun <T: Tree> find(key: String, type: KClass<T>): T? {
+        fun <T: Attributes> find(key: String, type: KClass<T>): T? {
             val value = children[key]
             if (value!=null) {
                 if (type.isInstance(value)) {
@@ -20,7 +20,7 @@ sealed class Tree {
             return null
         }
 
-        fun <T: Tree> get(key: String, type: KClass<T>): T {
+        fun <T: Attributes> get(key: String, type: KClass<T>): T {
             return find(key, type) ?: throw IllegalArgumentException("not found: $key")
         }
 
@@ -35,12 +35,18 @@ sealed class Tree {
         }
     }
 
-    data class Values<T>(val values: List<T>): Tree() {
+    data class Values<T>(val values: List<T>): Attributes() {
         fun <X: Any> asListOf(valueType: KClass<X>): List<X> {
             if (values.all { valueType.isInstance(it) }) {
                 return values as List<X>
             }
             throw IllegalArgumentException("value type mismatch: $values != $valueType")
+        }
+    }
+
+    companion object {
+        fun of(map: Map<String, String>): Node {
+            return Node(map.mapValues { Values(listOf(it)) })
         }
     }
 }

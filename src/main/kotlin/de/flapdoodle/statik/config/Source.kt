@@ -1,6 +1,6 @@
 package de.flapdoodle.statik.config
 
-import de.flapdoodle.statik.filetypes.Tree
+import de.flapdoodle.statik.filetypes.Attributes
 
 data class Source(
     val id: String,
@@ -21,7 +21,7 @@ data class Source(
     }
 
     companion object {
-        fun parse(id: String, root: Tree.Node): Source {
+        fun parse(id: String, root: Attributes.Node): Source {
             val paths = root.values("paths", String::class).toSet()
             val typeAttr = root.findValues("type", String::class)?.singleOrNull()
             val type = if (typeAttr != null)
