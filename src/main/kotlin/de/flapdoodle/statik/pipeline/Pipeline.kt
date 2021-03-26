@@ -6,12 +6,15 @@ import de.flapdoodle.statik.pipeline.documents.DocumentSetsFromFileSets
 import de.flapdoodle.statik.pipeline.documents.DocumentSetsFromFileSetsMapper
 import de.flapdoodle.statik.pipeline.files.ReadFileSets
 import de.flapdoodle.statik.pipeline.files.ReadFileSetsFromFS
+import de.flapdoodle.statik.pipeline.generate.DummyGenerator
+import de.flapdoodle.statik.pipeline.generate.Generator
 
 class Pipeline(
     private val readFileSets: ReadFileSets = ReadFileSetsFromFS(),
     private val documentsDocumentSetsFromFileSets: DocumentSetsFromFileSets = DocumentSetsFromFileSetsMapper(
         documentFromReference = MetaInHeadDocumentFromReferenceParser
-    )
+    ),
+    private val generator: Generator = DummyGenerator()
 ) {
     fun process(config: Config) {
         val fileSets = readFileSets.read(config.sources)
@@ -25,6 +28,6 @@ class Pipeline(
         println("documents:")
         documents.forEach { println(it) }
 
-        
+        generator.generate(config.pages, documents)
     }
 }

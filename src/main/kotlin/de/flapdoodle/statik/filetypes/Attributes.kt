@@ -39,6 +39,37 @@ sealed class Attributes {
                 it.asListOf(type)
             }
         }
+
+        operator fun plus(other: Node): Node {
+            val sameKeys = children.keys.intersect(other.keys())
+            require(sameKeys.isEmpty()) {"key conflicts: $sameKeys"}
+            return Node(children + other.children)
+        }
+
+        operator fun plus(value: Pair<String, Any>): Node {
+            return this + Node(children = mapOf(value.first to Values(listOf(value.second))))
+        }
+
+        fun flatten(separator: String): Map<String, Any> {
+            return flatten(null,separator)
+        }
+
+        private fun flatten(prefix: String?, separator: String): Map<String, Any> {
+            var map= emptyMap<String, Any>()
+            children.forEach { key, attributes ->
+                when (attributes) {
+                    is Node -> map = map + attributes
+                        .flatten(prefix?.let { it+separator }?:key, separator)
+                    is Values<*> -> {
+                        if (attributes.values.size==1) {
+                            // TODO how to handle this?
+                            map = map + (key to attributes.values[0]!!)
+                        }
+                    }
+                }
+            }
+            return map
+        }
     }
 
     data class Values<T>(val values: List<T>): Attributes() {
@@ -52,7 +83,7 @@ sealed class Attributes {
 
     companion object {
         fun of(map: Map<String, String>): Node {
-            return Node(map.mapValues { Values(listOf(it)) })
+            return Node(map.mapValues { Values(listOf(it.value)) })
         }
     }
 }

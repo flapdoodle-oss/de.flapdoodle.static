@@ -9,4 +9,6 @@ data class Document(
     val attributes: Attributes.Node,
     val contentType: ContentType,
     val content: String
-)
+) {
+    fun allAttributes() = attributes + reference.attributes
+}
