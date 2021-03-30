@@ -6,13 +6,13 @@ import de.flapdoodle.statik.types.asSet
 data class PageDefinition(
     val id: String,
     val path: String,
-    val pageSize: Long = 1L,
+    val pageSize: Int = 1,
     val template: String = id,
     val documents: Set<String> = emptySet(),
     val orderBy: Set<String> = emptySet()
 ) {
     init {
-        require(pageSize==1L || orderBy.isNotEmpty()) {"orderBy must be set if pageSize!=1"}
+        require(pageSize==1 || orderBy.isNotEmpty()) {"orderBy must be set if pageSize!=1"}
     }
     companion object {
         fun parse(id: String, root: Attributes.Node): PageDefinition {
@@ -25,7 +25,7 @@ data class PageDefinition(
             return PageDefinition(
                 id = id,
                 path = path,
-                pageSize = pageSize?.toLong() ?: 1L,
+                pageSize = pageSize?.toInt() ?: 1,
                 template = template,
                 documents = documents.asSet(),
                 orderBy = orderBy.asSet()

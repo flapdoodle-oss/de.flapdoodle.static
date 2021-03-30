@@ -1,3 +1,7 @@
 package de.flapdoodle.statik.documents
 
-data class DocumentSet(val id: String, val documents: List<Document>) 
+data class DocumentSet(
+    val id: String,
+    val documents: List<Document>
+    // TODO attributes ??
+)

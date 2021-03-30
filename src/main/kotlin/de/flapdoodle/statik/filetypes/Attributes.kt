@@ -82,7 +82,7 @@ sealed class Attributes {
     }
 
     companion object {
-        fun of(map: Map<String, String>): Node {
+        fun of(map: Map<String, Any>): Node {
             return Node(map.mapValues { Values(listOf(it.value)) })
         }
     }
