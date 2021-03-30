@@ -26,10 +26,10 @@ class DefaultPathMapGenerator(
             if (pageDefinition.pageSize == 1) {
                 // no paging
                 allDocuments.forEach { (docSetId, doc) ->
-                    val attributesMap = doc.allAttributes().flatten(".")
+                    val attributesMap = doc.allAttributes()
                     val renderedPath = renderPath.render(
                         parsedPath,
-                        attributesMap,
+                        propertyLookup = { name -> attributesMap.find(name.split('.'))?.singleOrNull()},
                         formatterLookup = { _, _ -> DefaultObjectFormatter() })
                     pathMap = pathMap.add(
                         renderedPath,
@@ -42,10 +42,10 @@ class DefaultPathMapGenerator(
                 val sortedDocument = sorted(allDocuments, pageDefinition, comparatorLookup)
                 val pageChunks = sortedDocument.chunked(pageDefinition.pageSize)
                 pageChunks.forEachIndexed { page, documents ->
-                    val attributesMap = Attributes.of(mapOf(Path.PAGE to page+1)).flatten(".")
+                    val attributesMap = Attributes.of(mapOf(Path.PAGE to page+1))
                     val renderedPath = renderPath.render(
                         parsedPath,
-                        attributesMap,
+                        propertyLookup = { name -> attributesMap.find(name.split('.'))?.singleOrNull()},
                         formatterLookup = { _, _ -> DefaultObjectFormatter() })
                     pathMap = pathMap.add(
                         renderedPath,

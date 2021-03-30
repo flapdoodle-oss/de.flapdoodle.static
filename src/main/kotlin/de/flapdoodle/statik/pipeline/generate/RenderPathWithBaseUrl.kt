@@ -1,13 +1,17 @@
 package de.flapdoodle.statik.pipeline.generate
 
 import de.flapdoodle.statik.path.Path
+import de.flapdoodle.statik.types.groupByUnique
 
 class RenderPathWithBaseUrl(val baseUrl: String): RenderPath {
     override fun render(
         path: Path,
-        properties: Map<String, Any>,
+        propertyLookup: (String) -> Any?,
         formatterLookup: (property: String, formatterName: String?) -> Formatter
     ): String {
+        val properties = path.propertyNames().toSet()
+            .map { it to propertyLookup(it) }.toMap()
+        
         val missingProperties = path.propertyNames().toSet().subtract(properties.keys)
 
         require(missingProperties.isEmpty()) {"missing properties: $missingProperties"}

@@ -9,7 +9,8 @@ internal class RenderPathWithBaseUrlTest {
     fun pagePathShouldOmitFirstPage() {
         val renderer = RenderPathWithBaseUrl("base/")
         val formatter = { property: String, formatterName: String? -> DefaultObjectFormatter() }
-        val result = renderer.render(Path.parse("foo/:bar/:page/"), mapOf("bar" to "baz", "page" to 1), formatter)
+        val map = mapOf("bar" to "baz", "page" to 1)
+        val result = renderer.render(Path.parse("foo/:bar/:page/"), map::get, formatter)
         assertEquals("base/foo/baz/", result)
     }
 
@@ -17,7 +18,8 @@ internal class RenderPathWithBaseUrlTest {
     fun doublePropertyShouldRender() {
         val renderer = RenderPathWithBaseUrl("base/")
         val formatter = { property: String, formatterName: String? -> DefaultObjectFormatter() }
-        val result = renderer.render(Path.parse("foo/:bar/:page/"), mapOf("bar" to 3.0, "page" to 1), formatter)
+        val map = mapOf("bar" to 3.0, "page" to 1)
+        val result = renderer.render(Path.parse("foo/:bar/:page/"), map::get, formatter)
         assertEquals("base/foo/3.0/", result)
     }
 }

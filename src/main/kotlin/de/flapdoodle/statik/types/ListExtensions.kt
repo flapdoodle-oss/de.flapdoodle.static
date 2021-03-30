@@ -15,8 +15,3 @@ fun <T> List<T>.tail(): List<T> {
     require(size>0) {"list is empty"}
     return subList(1,size)
 }
-
-fun <T,R> List<T>.groupByUnique(keySelector: (T) -> R): Map<R, T> {
-    return groupingBy(keySelector)
-        .reduce { key, _, element -> error("Duplicate key '$key' encountered for element '$element'") }
-}
