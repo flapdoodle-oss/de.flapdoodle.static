@@ -23,7 +23,7 @@ class DefaultPathMapGenerator(
             val matchingDocuments = documentsFor(documents, pageDefinition)
             val allDocuments = documents(matchingDocuments)
 
-            if (pageDefinition.pageSize == 1) {
+            if (pageDefinition.pageSize==null) {
                 // no paging
                 allDocuments.forEach { (docSetId, doc) ->
                     val attributesMap = doc.allAttributes()

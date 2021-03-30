@@ -1,9 +1,7 @@
 package de.flapdoodle.statik.pipeline.generate
 
-import de.flapdoodle.statik.config.PageDefinition
 import de.flapdoodle.statik.config.Pages
 import de.flapdoodle.statik.documents.DocumentSet
-import de.flapdoodle.statik.path.Path
 
 class DummyGenerator(
     private val pathMapGenerator: PathMapGenerator = DefaultPathMapGenerator()
