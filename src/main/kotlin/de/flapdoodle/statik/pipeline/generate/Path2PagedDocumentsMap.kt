@@ -30,4 +30,8 @@ data class Path2PagedDocumentsMap(val pathList: List<Path2PagedDocuments> = empt
     fun forEach(action: (String, Path2PagedDocuments) -> Unit) {
         pathMap.forEach(action)
     }
+
+    fun <D> map(transformation: (String, Path2PagedDocuments) -> D): List<D> {
+        return pathMap.map { transformation(it.key, it.value) }
+    }
 }

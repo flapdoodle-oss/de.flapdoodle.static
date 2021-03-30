@@ -6,6 +6,9 @@ data class Pages(
     val templatePath: String,
     val pageDefinitions: List<PageDefinition>
 ) {
+    operator fun get(id: String): PageDefinition {
+        return pageDefinitions.filter { it.id==id }.single()
+    }
 
     companion object {
         fun parse(root: Attributes.Node): Pages {

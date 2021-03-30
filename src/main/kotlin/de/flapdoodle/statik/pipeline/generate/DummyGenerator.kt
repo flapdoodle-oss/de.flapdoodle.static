@@ -1,39 +1,40 @@
 package de.flapdoodle.statik.pipeline.generate
 
 import de.flapdoodle.statik.config.Pages
+import de.flapdoodle.statik.documents.Document
 import de.flapdoodle.statik.documents.DocumentSet
 
 class DummyGenerator(
-    private val pathMapGenerator: PathMapGenerator = DefaultPathMapGenerator()
+    private val pathMapGenerator: PathMapGenerator = DefaultPathMapGenerator(),
+    private val renderPage: RenderPage = DummyPageRenderer()
 ) : Generator {
     override fun generate(pages: Pages, documents: List<DocumentSet>) {
         val pathMap = pathMapGenerator.pathMapOf(pages,documents)
         pathMap.forEach{ path, entry ->
             println("-------------------")
-            println(path)
+            println("path: $path")
+            println("pageId: ${entry.pageDefinition}")
+
             entry.documents.forEach {
                 println("-> $it")
             }
         }
 
-//        pages.pageDefinitions.forEach { pageDefinition ->
-//            val matchingDocuments = documentsFor(documents, pageDefinition)
-//            matchingDocuments.forEach { docSet ->
-//                docSet.documents.forEach { doc ->
-//                    val parsedPath = Path.parse(pageDefinition.path)
-//                    val attributesMap = (doc.allAttributes() + (Path.PAGE to 2)).flatten(".")
-//                    println("map: $attributesMap")
-//
-//                    val renderedPath = renderPath.render(parsedPath,attributesMap,formatterLookup = {_,_ -> DefaultObjectFormatter()})
-//                    println("could put \n${doc.reference}\n to\n$renderedPath")
-//                }
-//            }
-//        }
-    }
+        val documentsById = documents.flatMap { it.documents.map { it.id to it } }.toMap()
 
-//    private fun documentsFor(documents: List<DocumentSet>, pageDefinition: PageDefinition): List<DocumentSet> {
-//        if (pageDefinition.documents.isEmpty()) return documents
-//
-//        return documents.filter { pageDefinition.documents.contains(it.id) }
-//    }
+        val renderedDocuments = pathMap.map { path, entry ->
+            val matchingDocuments: List<Document> = entry.documents.map {
+                documentsById[it.id]
+                    ?: throw IllegalArgumentException("document ${it.id} not found") }
+            path to renderPage.render(path, pages[entry.pageDefinition.id], matchingDocuments)
+        }
+
+        renderedDocuments.forEach { (path, content) ->
+            println("-------------------")
+            println("path: $path")
+            println("- - - - - - - - - -")
+            println(content)
+        }
+
+    }
 }
