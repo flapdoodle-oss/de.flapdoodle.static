@@ -1,5 +1,7 @@
 package de.flapdoodle.statik.filetypes
 
+import de.flapdoodle.statik.types.head
+import de.flapdoodle.statik.types.tail
 import kotlin.reflect.KClass
 
 sealed class Attributes {
@@ -70,9 +72,25 @@ sealed class Attributes {
             }
             return map
         }
+
+        fun find(path: List<String>): List<*>? {
+            val currentKey = path.head()
+            val left = path.tail()
+            for ((key, attributes) in children) {
+                if (key == currentKey) {
+                    return when (attributes) {
+                        is Node -> if (!left.isEmpty()) attributes.find(left) else null
+                        is Values<*> -> {
+                            if (left.isEmpty()) attributes.values else null
+                        }
+                    }
+                }
+            }
+            return null
+        }
     }
 
-    data class Values<T>(val values: List<T>): Attributes() {
+    data class Values<T>(val values: List<T?>): Attributes() {
         fun <X: Any> asListOf(valueType: KClass<X>): List<X> {
             if (values.all { valueType.isInstance(it) }) {
                 return values as List<X>

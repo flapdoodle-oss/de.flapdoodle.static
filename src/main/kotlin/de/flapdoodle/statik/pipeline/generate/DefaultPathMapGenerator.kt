@@ -7,9 +7,13 @@ import de.flapdoodle.statik.documents.Document
 import de.flapdoodle.statik.documents.DocumentSet
 import de.flapdoodle.statik.filetypes.Attributes
 import de.flapdoodle.statik.path.Path
+import de.flapdoodle.statik.pipeline.compare.*
+import de.flapdoodle.statik.types.head
+import de.flapdoodle.statik.types.tail
 
 class DefaultPathMapGenerator(
-    val renderPath: RenderPath = RenderPathWithBaseUrl("baseUrl")
+    val renderPath: RenderPath = RenderPathWithBaseUrl("baseUrl"),
+    val comparatorLookup: ComparatorLookup = DefaultComparatorLookup
 ) : PathMapGenerator {
     override fun pathMapOf(pages: Pages, documents: List<DocumentSet>): Path2PagedDocumentsMap {
         var pathMap = Path2PagedDocumentsMap()
@@ -35,7 +39,7 @@ class DefaultPathMapGenerator(
                 }
             } else {
                 // paged
-                val sortedDocument = sorted(allDocuments, pageDefinition)
+                val sortedDocument = sorted(allDocuments, pageDefinition, comparatorLookup)
                 val pageChunks = sortedDocument.chunked(pageDefinition.pageSize)
                 pageChunks.forEachIndexed { page, documents ->
                     val attributesMap = Attributes.of(mapOf(Path.PAGE to page+1)).flatten(".")
@@ -69,37 +73,27 @@ class DefaultPathMapGenerator(
 
     private fun sorted(
         documents: List<Pair<String, Document>>,
-        pageDefinition: PageDefinition
+        pageDefinition: PageDefinition,
+        comparatorLookup: ComparatorLookup
     ): List<Pair<String, Document>> {
-        return documents.sortedWith(comparator(pageDefinition.orderBy))
-    }
+        val documentAttributes = documents.map { it.second.allAttributes() }
 
-    private fun comparator(orderBy: Set<String>): Comparator<Pair<String, Document>> {
-        return Comparator { a, b ->
-            val docA = a.second.allAttributes().flatten(".")
-            val docB = b.second.allAttributes().flatten(".")
-            compare(orderBy, docA, docB)
-        }
-    }
-
-    private fun compare(
-        orderBy: Set<String>,
-        a: Map<String, Any>,
-        b: Map<String, Any>
-    ): Int {
-        for (name in orderBy) {
-            val valA = a[name]
-            val valB = b[name]
-            val comparsion: Int = compare(valA, valB)
-            if (comparsion != 0) {
-                return comparsion
-            }
+        val comparatorByProperty: List<Pair<String, java.util.Comparator<in Any>?>> = pageDefinition.orderBy.map {
+            val path = it.split('.')
+            val values = documentAttributes.map { attr -> attr.find(path)?.singleOrNull() }.toSet()
+            val comparator = comparatorLookup.comparatorFor(values)
+            it to comparator
         }
 
-        return 0
-    }
+        val missingComparators = comparatorByProperty.filter { it.second==null }.map { it.first }
 
-    private fun compare(a: Any?, b: Any?): Int {
-        return 0
+        require(missingComparators.isEmpty()) {
+            "could not sort by $missingComparators"
+        }
+
+        val comparator = AttributesComparator(comparatorByProperty.map { it.first to it.second!! })
+
+
+        return documents.sortedWith(Comparators.compareWith(comparator) { it.second.allAttributes() })
     }
 }

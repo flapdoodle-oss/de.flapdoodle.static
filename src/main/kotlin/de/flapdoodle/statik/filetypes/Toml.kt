@@ -22,7 +22,7 @@ object Toml {
         return Attributes.Node(children)
     }
 
-    private fun <T> asArray(value: List<T>): Attributes.Values<T> {
+    private fun <T: Any> asArray(value: List<T?>): Attributes.Values<T> {
         return Attributes.Values(value)
     }
 }
