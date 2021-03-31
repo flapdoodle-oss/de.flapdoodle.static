@@ -5,16 +5,19 @@ import de.flapdoodle.statik.documents.Document
 import de.flapdoodle.statik.documents.DocumentSet
 import de.flapdoodle.statik.pipeline.templates.AlwaysPebbleRenderEngineFactory
 import de.flapdoodle.statik.pipeline.templates.RenderEngineFactory
-import de.flapdoodle.statik.pipeline.templates.Renderable
+import de.flapdoodle.statik.pipeline.templates.wrapper.Renderable
 import java.nio.file.Path
 
 class DummyGenerator(
     private val pathMapGenerator: PathMapGenerator = DefaultPathMapGenerator(),
     private val renderEngineFactory: RenderEngineFactory = AlwaysPebbleRenderEngineFactory()
 ) : Generator {
-    override fun generate(basePath: Path, pages: Pages, documents: List<DocumentSet>) {
-        val pathMap = pathMapGenerator.pathMapOf(pages,documents)
-        pathMap.forEach{ path, entry ->
+    override fun generate(
+        basePath: Path, pages: Pages, documents: List<DocumentSet>,
+        renderableFactory: (path: String, documents: List<Document>) -> Renderable
+    ) {
+        val pathMap = pathMapGenerator.pathMapOf(pages, documents)
+        pathMap.forEach { path, entry ->
             println("-------------------")
             println("path: $path")
             println("pageId: ${entry.pageDefinition}")
@@ -31,8 +34,9 @@ class DummyGenerator(
         val renderedDocuments = pathMap.map { path, entry ->
             val matchingDocuments: List<Document> = entry.documents.map {
                 documentsById[it.id]
-                    ?: throw IllegalArgumentException("document ${it.id} not found") }
-            val renderable = Renderable(matchingDocuments)
+                    ?: throw IllegalArgumentException("document ${it.id} not found")
+            }
+            val renderable = renderableFactory(path, matchingDocuments)
             val pageDefinition = pages[entry.pageDefinition.id]
             val templateName = pageDefinition.template
 

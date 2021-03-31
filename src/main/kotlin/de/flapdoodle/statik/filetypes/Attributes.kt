@@ -16,6 +16,7 @@ sealed class Attributes {
                 .keys
         }
 
+
         fun <T: Attributes> find(key: String, type: KClass<T>): T? {
             val value = children[key]
             if (value!=null) {
@@ -50,27 +51,6 @@ sealed class Attributes {
 
         operator fun plus(value: Pair<String, Any>): Node {
             return this + Node(children = mapOf(value.first to Values(listOf(value.second))))
-        }
-
-        fun flatten(separator: String): Map<String, Any> {
-            return flatten(null,separator)
-        }
-
-        private fun flatten(prefix: String?, separator: String): Map<String, Any> {
-            var map= emptyMap<String, Any>()
-            children.forEach { key, attributes ->
-                when (attributes) {
-                    is Node -> map = map + attributes
-                        .flatten(prefix?.let { it+separator }?:key, separator)
-                    is Values<*> -> {
-                        if (attributes.values.size==1) {
-                            // TODO how to handle this?
-                            map = map + (key to attributes.values[0]!!)
-                        }
-                    }
-                }
-            }
-            return map
         }
 
         fun find(path: List<String>): List<*>? {

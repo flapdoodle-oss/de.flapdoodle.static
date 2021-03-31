@@ -8,6 +8,8 @@ import de.flapdoodle.statik.pipeline.files.ReadFileSets
 import de.flapdoodle.statik.pipeline.files.ReadFileSetsFromFS
 import de.flapdoodle.statik.pipeline.generate.DummyGenerator
 import de.flapdoodle.statik.pipeline.generate.Generator
+import de.flapdoodle.statik.pipeline.templates.wrapper.Renderable
+import de.flapdoodle.statik.pipeline.templates.wrapper.SiteWrapper
 
 class Pipeline(
     private val readFileSets: ReadFileSets = ReadFileSetsFromFS(),
@@ -28,6 +30,13 @@ class Pipeline(
         println("documents:")
         documents.forEach { println(it) }
 
-        generator.generate(config.basePath, config.pages, documents)
+        generator.generate(config.basePath, config.pages, documents) { path, documents ->
+            Renderable(
+                url = path,
+                baseUrl = "foo",
+                site = SiteWrapper(config.site),
+                documents = documents
+            )
+        }
     }
 }
