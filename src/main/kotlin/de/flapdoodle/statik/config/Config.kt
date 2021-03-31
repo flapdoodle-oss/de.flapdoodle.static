@@ -7,6 +7,7 @@ import java.nio.file.Files
 import java.nio.file.Path
 
 data class Config(
+    val basePath: Path,
     val sources: Sources,
     val pages: Pages
 ) {
@@ -17,6 +18,7 @@ data class Config(
             val pageConfig = source.get("pages", Attributes.Node::class)
             
             return Config(
+                basePath = basePath,
                 sources = Sources.parse(basePath, sourceConfig),
                 pages = Pages.parse(pageConfig)
             )

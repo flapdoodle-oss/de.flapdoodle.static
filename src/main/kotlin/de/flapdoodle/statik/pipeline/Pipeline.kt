@@ -28,6 +28,6 @@ class Pipeline(
         println("documents:")
         documents.forEach { println(it) }
 
-        generator.generate(config.pages, documents)
+        generator.generate(config.basePath, config.pages, documents)
     }
 }
