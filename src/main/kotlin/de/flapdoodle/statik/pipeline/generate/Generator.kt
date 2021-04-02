@@ -8,9 +8,10 @@ import java.nio.file.Path
 
 interface Generator {
     fun generate(
+        baseUrl: String,
         basePath: Path,
         pages: Pages,
         documents: List<DocumentSet>,
         renderableFactory: (path: String, documents: List<Document>) -> Renderable
-    )
+    ): RendererPages
 }

@@ -8,14 +8,12 @@ import de.flapdoodle.statik.documents.DocumentSet
 import de.flapdoodle.statik.filetypes.Attributes
 import de.flapdoodle.statik.path.Path
 import de.flapdoodle.statik.pipeline.compare.*
-import de.flapdoodle.statik.types.head
-import de.flapdoodle.statik.types.tail
 
 class DefaultPathMapGenerator(
-    val renderPath: RenderPath = RenderPathWithBaseUrl("baseUrl"),
+    val renderPath: RenderPath = DefaultRenderPath(),
     val comparatorLookup: ComparatorLookup = DefaultComparatorLookup
 ) : PathMapGenerator {
-    override fun pathMapOf(pages: Pages, documents: List<DocumentSet>): Path2PagedDocumentsMap {
+    override fun pathMapOf(baseUrl: String, pages: Pages, documents: List<DocumentSet>): Path2PagedDocumentsMap {
         var pathMap = Path2PagedDocumentsMap()
 
         pages.pageDefinitions.forEach { pageDefinition ->
@@ -28,9 +26,10 @@ class DefaultPathMapGenerator(
                 allDocuments.forEach { (docSetId, doc) ->
                     val attributesMap = doc.allAttributes()
                     val renderedPath = renderPath.render(
+                        baseUrl,
                         parsedPath,
-                        propertyLookup = { name -> attributesMap.find(name.split('.'))?.singleOrNull()},
-                        formatterLookup = { _, _ -> DefaultObjectFormatter() })
+                        propertyLookup = { name -> attributesMap.find(name.split('.'))?.singleOrNull()}
+                    ) { _, _ -> DefaultObjectFormatter() }
                     pathMap = pathMap.add(
                         renderedPath,
                         Id.of(pageDefinition, PageDefinition::id),
@@ -44,9 +43,10 @@ class DefaultPathMapGenerator(
                 pageChunks.forEachIndexed { page, documents ->
                     val attributesMap = Attributes.of(mapOf(Path.PAGE to page+1))
                     val renderedPath = renderPath.render(
+                        baseUrl,
                         parsedPath,
-                        propertyLookup = { name -> attributesMap.find(name.split('.'))?.singleOrNull()},
-                        formatterLookup = { _, _ -> DefaultObjectFormatter() })
+                        propertyLookup = { name -> attributesMap.find(name.split('.'))?.singleOrNull()}
+                    ) { _, _ -> DefaultObjectFormatter() }
                     pathMap = pathMap.add(
                         renderedPath,
                         Id.of(pageDefinition, PageDefinition::id),

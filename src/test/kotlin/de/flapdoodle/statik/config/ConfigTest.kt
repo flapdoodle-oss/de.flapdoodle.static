@@ -12,6 +12,6 @@ private class ConfigTest {
         val configFile = javaClass.readResource("/usecase/sample.toml")
         val toml = Toml.asTree(configFile)
         val config = Config.parse(Path.of("/basePath"),toml)
-        println(config)
+//        println(config)
     }
 }

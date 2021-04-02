@@ -7,6 +7,7 @@ import com.github.ajalt.clikt.parameters.arguments.validate
 import com.github.ajalt.clikt.parameters.types.path
 import de.flapdoodle.statik.config.Config
 import de.flapdoodle.statik.pipeline.Pipeline
+import de.flapdoodle.statik.pipeline.publish.UndertowPublisher
 
 object Static {
 
@@ -33,7 +34,10 @@ object Static {
         }
 
         override fun run() {
-            Pipeline().process(Config.parse(config))
+            val publisher = UndertowPublisher()
+            val pipeline = Pipeline(publisher = publisher)
+            pipeline.process(Config.parse(config))
+
         }
     }
     

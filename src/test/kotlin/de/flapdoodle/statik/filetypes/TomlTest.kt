@@ -10,7 +10,7 @@ class TomlTest {
         val sample = javaClass.readResource("sample.toml")
         val tree = Toml.asTree(sample)
 
-        println("tree: $tree")
+//        println("tree: $tree")
     }
 
 }

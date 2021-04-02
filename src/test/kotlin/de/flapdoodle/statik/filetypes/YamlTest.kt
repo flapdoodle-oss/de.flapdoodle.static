@@ -10,6 +10,6 @@ private class YamlTest {
         val sample = javaClass.readResource("sample.yaml")
         val tree = Yaml.asTree(sample)
 
-        println("tree: $tree")
+//        println("tree: $tree")
     }
 }

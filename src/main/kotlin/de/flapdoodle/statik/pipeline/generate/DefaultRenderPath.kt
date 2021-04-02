@@ -1,10 +1,10 @@
 package de.flapdoodle.statik.pipeline.generate
 
 import de.flapdoodle.statik.path.Path
-import de.flapdoodle.statik.types.groupByUnique
 
-class RenderPathWithBaseUrl(val baseUrl: String): RenderPath {
+class DefaultRenderPath : RenderPath {
     override fun render(
+        baseUrl: String,
         path: Path,
         propertyLookup: (String) -> Any?,
         formatterLookup: (property: String, formatterName: String?) -> Formatter

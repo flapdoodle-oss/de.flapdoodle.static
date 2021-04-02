@@ -13,10 +13,13 @@ class DummyGenerator(
     private val renderEngineFactory: RenderEngineFactory = AlwaysPebbleRenderEngineFactory()
 ) : Generator {
     override fun generate(
-        basePath: Path, pages: Pages, documents: List<DocumentSet>,
+        baseUrl: String,
+        basePath: Path,
+        pages: Pages,
+        documents: List<DocumentSet>,
         renderableFactory: (path: String, documents: List<Document>) -> Renderable
-    ) {
-        val pathMap = pathMapGenerator.pathMapOf(pages, documents)
+    ): RendererPages {
+        val pathMap = pathMapGenerator.pathMapOf(baseUrl, pages, documents)
         pathMap.forEach { path, entry ->
             println("-------------------")
             println("path: $path")
@@ -41,7 +44,8 @@ class DummyGenerator(
             val templateName = pageDefinition.template
 
             val renderedContent = renderEngine.render(templateName, renderable)
-            path to renderedContent
+            RendererPages.Page(path, renderedContent)
+//            path to renderedContent
         }
 
         renderedDocuments.forEach { (path, content) ->
@@ -51,5 +55,6 @@ class DummyGenerator(
             println(content)
         }
 
+        return RendererPages(renderedDocuments)
     }
 }
