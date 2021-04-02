@@ -8,6 +8,7 @@ import de.flapdoodle.statik.pipeline.files.ReadFileSets
 import de.flapdoodle.statik.pipeline.files.ReadFileSetsFromFS
 import de.flapdoodle.statik.pipeline.generate.DummyGenerator
 import de.flapdoodle.statik.pipeline.generate.Generator
+import de.flapdoodle.statik.pipeline.publish.Dump2ConsolePublisher
 import de.flapdoodle.statik.pipeline.publish.Publisher
 import de.flapdoodle.statik.pipeline.publish.UndertowPublisher
 import de.flapdoodle.statik.pipeline.templates.wrapper.Renderable
@@ -19,7 +20,7 @@ class Pipeline(
         documentFromReference = MetaInHeadDocumentFromReferenceParser
     ),
     private val generator: Generator = DummyGenerator(),
-    private val publisher: Publisher = UndertowPublisher()
+    private val publisher: Publisher = Dump2ConsolePublisher()
 ) {
     fun process(config: Config) {
         val fileSets = readFileSets.read(config.sources)

@@ -4,6 +4,8 @@ import de.flapdoodle.statik.pipeline.generate.RendererPages
 import io.undertow.Undertow
 import io.undertow.server.HttpServerExchange
 import io.undertow.util.Headers
+import org.xnio.Option
+import org.xnio.Options
 import java.util.concurrent.atomic.AtomicReference
 
 class UndertowPublisher : Publisher {
@@ -30,6 +32,7 @@ class UndertowPublisher : Publisher {
                 exchange.responseSender.send("no content at all")
             }
         }
+        .setServerOption(Options.THREAD_DAEMON,true)
         .build()
 
     init {
@@ -42,6 +45,10 @@ class UndertowPublisher : Publisher {
 
     override fun publish(rendererPages: RendererPages) {
         this.rendererPages.set(rendererPages)
+    }
+
+    fun stop() {
+        server.stop()
     }
 
     companion object {

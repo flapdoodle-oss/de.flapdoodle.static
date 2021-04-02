@@ -4,10 +4,16 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.context
 import com.github.ajalt.clikt.parameters.arguments.argument
 import com.github.ajalt.clikt.parameters.arguments.validate
+import com.github.ajalt.clikt.parameters.options.flag
+import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.path
 import de.flapdoodle.statik.config.Config
 import de.flapdoodle.statik.pipeline.Pipeline
+import de.flapdoodle.statik.pipeline.publish.Dump2ConsolePublisher
+import de.flapdoodle.statik.pipeline.publish.Publisher
 import de.flapdoodle.statik.pipeline.publish.UndertowPublisher
+import java.io.Console
+import java.util.*
 
 object Static {
 
@@ -33,11 +39,35 @@ object Static {
             require(it.toFile().isDirectory) { "is not a directory"}
         }
 
+        val preview by option("-p","--preview",help = "preview")
+            .flag(default = false)
+
         override fun run() {
-            val publisher = UndertowPublisher()
-            val pipeline = Pipeline(publisher = publisher)
+            val publisherAndCleanup = publisher(preview)
+            
+            val pipeline = Pipeline(publisher = publisherAndCleanup.first)
+            
             pipeline.process(Config.parse(config))
 
+            publisherAndCleanup.second()
+        }
+
+        private fun publisher(preview: Boolean): Pair<Publisher, () -> Unit> {
+            return if (preview) {
+                val undertowPublisher = UndertowPublisher()
+                undertowPublisher to { ->
+                    println("-----------------------------------------")
+                    println("server is running at http//localhost:8080")
+                    println("")
+                    println("press enter to stop")
+                    println("-----------------------------------------")
+                    System.`in`.read()
+                    println("stop...")
+                    undertowPublisher.stop()
+                }
+            } else {
+                Dump2ConsolePublisher() to {}
+            }
         }
     }
     
