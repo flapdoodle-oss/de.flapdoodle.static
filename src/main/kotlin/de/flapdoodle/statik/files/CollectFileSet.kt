@@ -1,17 +1,19 @@
 package de.flapdoodle.statik.files
 
-import de.flapdoodle.statik.config.Source
 import de.flapdoodle.statik.filetypes.Attributes
 import de.flapdoodle.statik.io.FileTreeEvent
+import de.flapdoodle.statik.io.IO
 import de.flapdoodle.statik.io.OnFileTreeEvent
 import de.flapdoodle.statik.io.PathPattern
 import java.nio.file.Path
 
 class CollectFileSet(
     val basePath: Path,
-    val source: Source
+    val fileSetId: String,
+    paths: Set<String>,
+    val fileType: FileType
 ) : OnFileTreeEvent {
-    private var pathPatterns = PathPattern(source.paths)
+    private var pathPatterns = PathPattern(paths)
 
     private var nodes = emptyList<Reference>()
 
@@ -39,6 +41,19 @@ class CollectFileSet(
     }
 
     fun fileSet(): FileSet {
-        return FileSet(source.id, source.type, nodes)
+        return FileSet(fileSetId, basePath, fileType, nodes)
+    }
+
+    companion object {
+        fun read(
+            basePath: Path,
+            fileSetId: String,
+            paths: Set<String>,
+            fileType: FileType
+        ): FileSet {
+            val collector = CollectFileSet(basePath, fileSetId, paths, fileType)
+            IO.scan(basePath, collector)
+            return collector.fileSet()
+        }
     }
 }

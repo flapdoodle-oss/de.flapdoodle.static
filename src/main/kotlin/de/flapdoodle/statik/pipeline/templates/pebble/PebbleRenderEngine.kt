@@ -2,12 +2,21 @@ package de.flapdoodle.statik.pipeline.templates.pebble
 
 import com.mitchellbosecke.pebble.PebbleEngine
 import com.mitchellbosecke.pebble.loader.FileLoader
+import de.flapdoodle.statik.config.Template
+import de.flapdoodle.statik.files.CollectFileSet
+import de.flapdoodle.statik.files.FileSet
+import de.flapdoodle.statik.files.FileType
 import de.flapdoodle.statik.pipeline.templates.RenderEngine
 import de.flapdoodle.statik.pipeline.templates.wrapper.Renderable
 import java.io.StringWriter
 import java.nio.file.Path
 
-class PebbleRenderEngine(templatePath: Path) : RenderEngine {
+class PebbleRenderEngine(
+    basePath: Path,
+    private val template: Template
+) : RenderEngine {
+    private val templatePath = basePath.resolve(template.path)
+    
     private val loader = FileLoader()
     private val engine = PebbleEngine.Builder()
         .loader(loader)
@@ -29,5 +38,11 @@ class PebbleRenderEngine(templatePath: Path) : RenderEngine {
         template.evaluate(writer, mutableMapOf("it" to (renderable as Any)))
 
         return writer.toString()
+    }
+
+    override fun mediaFiles(): List<FileSet> {
+        return template.resources.map {
+            CollectFileSet.read(templatePath, it.id, it.paths, FileType.Binary)
+        }
     }
 }

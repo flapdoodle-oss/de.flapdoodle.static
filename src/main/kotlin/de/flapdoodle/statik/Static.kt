@@ -7,7 +7,10 @@ import com.github.ajalt.clikt.parameters.arguments.validate
 import com.github.ajalt.clikt.parameters.options.flag
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.path
+import com.google.inject.Guice
 import de.flapdoodle.statik.config.Config
+import de.flapdoodle.statik.di.CleanUp
+import de.flapdoodle.statik.di.PipelineModule
 import de.flapdoodle.statik.pipeline.Pipeline
 import de.flapdoodle.statik.pipeline.publish.Dump2ConsolePublisher
 import de.flapdoodle.statik.pipeline.publish.Publisher
@@ -43,13 +46,13 @@ object Static {
             .flag(default = false)
 
         override fun run() {
-            val publisherAndCleanup = publisher(preview)
-            
-            val pipeline = Pipeline(publisher = publisherAndCleanup.first)
+            val injector = Guice.createInjector(PipelineModule(true))
+            val pipeline = injector.getInstance(Pipeline::class.java)
+            val cleanup = injector.getInstance(CleanUp::class.java)
             
             pipeline.process(Config.parse(config))
 
-            publisherAndCleanup.second()
+            cleanup.doIt()
         }
 
         private fun publisher(preview: Boolean): Pair<Publisher, () -> Unit> {

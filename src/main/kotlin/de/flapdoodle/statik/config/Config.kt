@@ -9,6 +9,7 @@ import java.nio.file.Path
 data class Config(
     val basePath: Path,
     val site: Site,
+    val template: Template,
     val sources: Sources,
     val pages: Pages
 ) {
@@ -17,11 +18,13 @@ data class Config(
         fun parse(basePath: Path, source: Attributes.Node): Config {
             val siteConfig = source.get("site", Attributes.Node::class)
             val sourceConfig = source.get("sources", Attributes.Node::class)
+            val templateConfig = source.get("template", Attributes.Node::class)
             val pageConfig = source.get("pages", Attributes.Node::class)
             
             return Config(
                 basePath = basePath,
                 site = Site.parse(siteConfig),
+                template = Template.parse(templateConfig),
                 sources = Sources.parse(basePath, sourceConfig),
                 pages = Pages.parse(pageConfig)
             )

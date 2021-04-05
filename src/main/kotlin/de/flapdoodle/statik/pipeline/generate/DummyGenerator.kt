@@ -3,20 +3,20 @@ package de.flapdoodle.statik.pipeline.generate
 import de.flapdoodle.statik.config.Pages
 import de.flapdoodle.statik.documents.Document
 import de.flapdoodle.statik.documents.DocumentSet
-import de.flapdoodle.statik.pipeline.templates.AlwaysPebbleRenderEngineFactory
-import de.flapdoodle.statik.pipeline.templates.RenderEngineFactory
+import de.flapdoodle.statik.pipeline.templates.RenderEngine
 import de.flapdoodle.statik.pipeline.templates.wrapper.Renderable
 import java.nio.file.Path
+import javax.inject.Inject
 
-class DummyGenerator(
-    private val pathMapGenerator: PathMapGenerator = DefaultPathMapGenerator(),
-    private val renderEngineFactory: RenderEngineFactory = AlwaysPebbleRenderEngineFactory()
+class DummyGenerator @Inject constructor(
+    private val pathMapGenerator: PathMapGenerator
 ) : Generator {
     override fun generate(
         baseUrl: String,
         basePath: Path,
         pages: Pages,
         documents: List<DocumentSet>,
+        renderEngine: RenderEngine,
         renderableFactory: (path: String, documents: List<Document>) -> Renderable
     ): RendererPages {
         val pathMap = pathMapGenerator.pathMapOf(baseUrl, pages, documents)
@@ -31,8 +31,6 @@ class DummyGenerator(
         }
 
         val documentsById = documents.flatMap { it.documents.map { it.id to it } }.toMap()
-
-        val renderEngine = renderEngineFactory.renderEngine(basePath.resolve(pages.templatePath))
 
         val renderedDocuments = pathMap.map { path, entry ->
             val matchingDocuments: List<Document> = entry.documents.map {

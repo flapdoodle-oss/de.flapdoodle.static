@@ -8,9 +8,7 @@ import de.flapdoodle.statik.io.IO
 class ReadFileSetsFromFS : ReadFileSets {
     override fun read(sources: Sources): List<FileSet> {
         return sources.sources.map { source ->
-            val collector = CollectFileSet(sources.basePath, source)
-            IO.scan(sources.basePath, collector)
-            collector.fileSet()
+            CollectFileSet.read(sources.basePath, source.id, source.paths, source.type)
         }
     }
 }
