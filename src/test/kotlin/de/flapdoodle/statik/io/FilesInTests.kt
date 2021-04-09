@@ -4,6 +4,7 @@ import java.io.File
 import java.nio.file.Files
 import java.nio.file.Path
 import java.nio.file.StandardOpenOption
+import kotlin.streams.toList
 
 class FilesInTests(private val directory: Path) : AutoCloseable {
 
@@ -39,6 +40,19 @@ class FilesInTests(private val directory: Path) : AutoCloseable {
             return newHelper
         }
 
+        fun delete() {
+            Files.walk(current)
+//                .filter(Files::isRegularFile)
+                .map(Path::toFile)
+                .toList()
+                .reversed()
+//                .map {
+//                    println("delete -> $it")
+//                    it
+//                }
+                .forEach(File::delete)
+        }
+
         fun createFile(name: String, content: String, lastModified: LastModified? = null): Path {
             return createFile(name, content.toByteArray(Charsets.UTF_8), lastModified)
         }
@@ -60,5 +74,6 @@ class FilesInTests(private val directory: Path) : AutoCloseable {
             }
             return newPath
         }
+
     }
 }

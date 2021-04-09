@@ -11,12 +11,14 @@ import com.google.inject.Guice
 import de.flapdoodle.statik.config.Config
 import de.flapdoodle.statik.di.CleanUp
 import de.flapdoodle.statik.di.PipelineModule
+import de.flapdoodle.statik.io.PathWatcher
 import de.flapdoodle.statik.pipeline.Pipeline
 import de.flapdoodle.statik.pipeline.publish.Dump2ConsolePublisher
 import de.flapdoodle.statik.pipeline.publish.Publisher
 import de.flapdoodle.statik.pipeline.publish.UndertowPublisher
 import java.io.Console
 import java.util.*
+import java.util.concurrent.TimeUnit
 
 object Static {
 
@@ -46,31 +48,21 @@ object Static {
             .flag(default = false)
 
         override fun run() {
-            val injector = Guice.createInjector(PipelineModule(true))
+            val injector = Guice.createInjector(PipelineModule(preview))
             val pipeline = injector.getInstance(Pipeline::class.java)
             val cleanup = injector.getInstance(CleanUp::class.java)
-            
+
             pipeline.process(Config.parse(config))
+            if (preview) {
+                val watchDir = config.parent
+                println("watch $watchDir")
+                PathWatcher.watch(watchDir,100,TimeUnit.MILLISECONDS) {
+                    println("something has changed")
+                    pipeline.process(Config.parse(config))
+                }
+            }
 
             cleanup.doIt()
-        }
-
-        private fun publisher(preview: Boolean): Pair<Publisher, () -> Unit> {
-            return if (preview) {
-                val undertowPublisher = UndertowPublisher()
-                undertowPublisher to { ->
-                    println("-----------------------------------------")
-                    println("server is running at http//localhost:8080")
-                    println("")
-                    println("press enter to stop")
-                    println("-----------------------------------------")
-                    System.`in`.read()
-                    println("stop...")
-                    undertowPublisher.stop()
-                }
-            } else {
-                Dump2ConsolePublisher() to {}
-            }
         }
     }
     
