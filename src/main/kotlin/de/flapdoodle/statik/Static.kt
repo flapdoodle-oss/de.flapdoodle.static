@@ -55,9 +55,7 @@ object Static {
             pipeline.process(Config.parse(config))
             if (preview) {
                 val watchDir = config.parent
-                println("watch $watchDir")
                 PathWatcher.watch(watchDir,100,TimeUnit.MILLISECONDS) {
-                    println("something has changed")
                     pipeline.process(Config.parse(config))
                 }
             }
