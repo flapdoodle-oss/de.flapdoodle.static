@@ -2,10 +2,20 @@ package de.flapdoodle.statik.pipeline.templates.pebble
 
 import com.mitchellbosecke.pebble.attributes.AttributeResolver
 import com.mitchellbosecke.pebble.extension.AbstractExtension
+import com.mitchellbosecke.pebble.extension.Filter
 
 class CustomExtension : AbstractExtension() {
     override fun getAttributeResolver(): MutableList<AttributeResolver> {
         return mutableListOf(HasAttributesAttributeResolver())
+    }
+
+    override fun getFilters(): MutableMap<String, Filter> {
+        return mutableMapOf(
+            "single" to SingleElementFilter(),
+            "singleOrNull" to SingleElementFilter(true),
+            "allWithKey" to HasKeyFilter(),
+            "keyContains" to KeyContainsFilter()
+        )
     }
 
 //    class AttributesTreeResolver : AttributeResolver {

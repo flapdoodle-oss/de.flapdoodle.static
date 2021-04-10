@@ -15,6 +15,7 @@ import de.flapdoodle.statik.pipeline.publish.Dump2ConsolePublisher
 import de.flapdoodle.statik.pipeline.publish.Publisher
 import de.flapdoodle.statik.pipeline.publish.UndertowPublisher
 import de.flapdoodle.statik.pipeline.templates.RenderEngineFactory
+import de.flapdoodle.statik.pipeline.templates.wrapper.DocumentWrapper
 import de.flapdoodle.statik.pipeline.templates.wrapper.Renderable
 import de.flapdoodle.statik.pipeline.templates.wrapper.SiteWrapper
 
@@ -47,7 +48,7 @@ class Pipeline @Inject constructor(
                 url = path,
                 baseUrl = publisher.baseUrl(),
                 site = SiteWrapper(config.site),
-                documents = documents
+                documents = documents.map(::DocumentWrapper)
             )
         }
         val processedMediaFiles = processMediaFiles.process(

@@ -11,12 +11,15 @@ import com.google.inject.Guice
 import de.flapdoodle.statik.config.Config
 import de.flapdoodle.statik.di.CleanUp
 import de.flapdoodle.statik.di.PipelineModule
+import de.flapdoodle.statik.io.Deferer
 import de.flapdoodle.statik.io.PathWatcher
 import de.flapdoodle.statik.pipeline.Pipeline
+import de.flapdoodle.statik.pipeline.ProcessPipelineException
 import de.flapdoodle.statik.pipeline.publish.Dump2ConsolePublisher
 import de.flapdoodle.statik.pipeline.publish.Publisher
 import de.flapdoodle.statik.pipeline.publish.UndertowPublisher
 import java.io.Console
+import java.lang.RuntimeException
 import java.util.*
 import java.util.concurrent.TimeUnit
 
@@ -48,22 +51,39 @@ object Static {
             .flag(default = false)
 
         override fun run() {
-            val injector = Guice.createInjector(PipelineModule(preview))
+            val injector = Guice.createInjector(PipelineModule(preview, destination))
             val pipeline = injector.getInstance(Pipeline::class.java)
             val cleanup = injector.getInstance(CleanUp::class.java)
 
-            pipeline.process(Config.parse(config))
+
+            processPipeline(pipeline)
+
             if (preview) {
+                val deferedPipeline = Deferer.onInactivityFor<Unit>(100,TimeUnit.MILLISECONDS) {
+                    processPipeline(pipeline)
+                }
+
                 val watchDir = config.parent
+
                 PathWatcher.watch(watchDir,100,TimeUnit.MILLISECONDS) {
-                    pipeline.process(Config.parse(config))
+                    deferedPipeline(Unit)
                 }
             }
 
             cleanup.doIt()
         }
+
+        private fun processPipeline(pipeline: Pipeline) {
+            try {
+                pipeline.process(Config.parse(config))
+            } catch (ex: ProcessPipelineException) {
+                ex.printStackTrace()
+            } catch (ex: Exception) {
+                ex.printStackTrace()
+            }
+        }
     }
-    
+
     @JvmStatic
     fun main(args: Array<String>) {
         Args().main(args.toList())
