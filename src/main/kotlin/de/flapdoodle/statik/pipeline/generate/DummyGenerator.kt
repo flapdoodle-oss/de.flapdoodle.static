@@ -46,12 +46,12 @@ class DummyGenerator @Inject constructor(
 //            path to renderedContent
         }
 
-        renderedDocuments.forEach { (path, content) ->
-            println("-------------------")
-            println("path: $path")
-            println("- - - - - - - - - -")
-            println(content)
-        }
+//        renderedDocuments.forEach { (path, content) ->
+//            println("-------------------")
+//            println("path: $path")
+//            println("- - - - - - - - - -")
+//            println(content)
+//        }
 
         return RendererPages(renderedDocuments)
     }

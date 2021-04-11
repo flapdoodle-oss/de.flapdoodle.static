@@ -29,7 +29,7 @@ class PebbleRenderEngine(
 
     init {
         loader.prefix = templatePath.toAbsolutePath().toString()
-        loader.suffix = ".html"
+        loader.suffix = ".peb"
     }
 
     override fun render(templatePath: String, renderable: Renderable): String {
