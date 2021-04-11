@@ -1,10 +1,11 @@
 package de.flapdoodle.statik.pipeline.generate
 
 import de.flapdoodle.statik.config.Pages
+import de.flapdoodle.statik.config.Site
 import de.flapdoodle.statik.documents.Document
 import de.flapdoodle.statik.documents.DocumentSet
+import de.flapdoodle.statik.pipeline.templates.RenderData
 import de.flapdoodle.statik.pipeline.templates.RenderEngine
-import de.flapdoodle.statik.pipeline.templates.wrapper.Renderable
 import java.nio.file.Path
 import javax.inject.Inject
 
@@ -15,9 +16,9 @@ class DummyGenerator @Inject constructor(
         baseUrl: String,
         basePath: Path,
         pages: Pages,
+        site: Site,
         documents: List<DocumentSet>,
-        renderEngine: RenderEngine,
-        renderableFactory: (path: String, documents: List<Document>) -> Renderable
+        renderEngine: RenderEngine
     ): RendererPages {
         val pathMap = pathMapGenerator.pathMapOf(baseUrl, pages, documents)
         pathMap.forEach { path, entry ->
@@ -37,11 +38,18 @@ class DummyGenerator @Inject constructor(
                 documentsById[it.id]
                     ?: throw IllegalArgumentException("document ${it.id} not found")
             }
-            val renderable = renderableFactory(path, matchingDocuments)
             val pageDefinition = pages[entry.pageDefinition.id]
             val templateName = pageDefinition.template
 
-            val renderedContent = renderEngine.render(templateName, renderable)
+            val renderedContent = renderEngine.render(
+                templateName, RenderData(
+                    url = path,
+                    baseUrl = baseUrl,
+                    site = site,
+                    documents = matchingDocuments,
+                    pathOfDocumentInPage = pathMap
+                )
+            )
             RendererPages.Page(path, renderedContent)
 //            path to renderedContent
         }

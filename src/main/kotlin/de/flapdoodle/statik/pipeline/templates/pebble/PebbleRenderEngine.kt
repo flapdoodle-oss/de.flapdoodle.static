@@ -8,8 +8,11 @@ import de.flapdoodle.statik.files.CollectFileSet
 import de.flapdoodle.statik.files.FileSet
 import de.flapdoodle.statik.files.FileType
 import de.flapdoodle.statik.pipeline.ProcessPipelineException
+import de.flapdoodle.statik.pipeline.templates.RenderData
 import de.flapdoodle.statik.pipeline.templates.RenderEngine
+import de.flapdoodle.statik.pipeline.templates.wrapper.DocumentWrapper
 import de.flapdoodle.statik.pipeline.templates.wrapper.Renderable
+import de.flapdoodle.statik.pipeline.templates.wrapper.SiteWrapper
 import java.io.StringWriter
 import java.nio.file.Path
 
@@ -32,14 +35,21 @@ class PebbleRenderEngine(
         loader.suffix = ".peb"
     }
 
-    override fun render(templatePath: String, renderable: Renderable): String {
+    override fun render(templatePath: String, renderData: RenderData): String {
         val writer = StringWriter()
         try {
             val template = engine.getTemplate(templatePath)
-        
-            template.evaluate(writer, mutableMapOf("it" to (renderable as Any)))
+
+            val wrapper = Renderable(
+                url = renderData.url,
+                baseUrl = renderData.baseUrl,
+                documents = renderData.documents.map { DocumentWrapper(it, renderData.pathOfDocumentInPage) },
+                site = SiteWrapper(renderData.site),
+            )
+
+            template.evaluate(writer, mutableMapOf("it" to (wrapper as Any)))
         } catch (ex: PebbleException) {
-            throw ProcessPipelineException("could not render $renderable with $templatePath", ex)
+            throw ProcessPipelineException("could not render $renderData with $templatePath", ex)
         }
 
         return writer.toString()

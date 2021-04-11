@@ -5,7 +5,9 @@ import de.flapdoodle.statik.config.PageDefinition
 import de.flapdoodle.statik.documents.Document
 import de.flapdoodle.statik.types.groupByUnique
 
-data class Path2PagedDocumentsMap(val pathList: List<Path2PagedDocuments> = emptyList<Path2PagedDocuments>()) {
+data class Path2PagedDocumentsMap(
+    val pathList: List<Path2PagedDocuments> = emptyList()
+): PathOfDocumentInPage {
 
     private val pathMap = pathList.groupByUnique(Path2PagedDocuments::path)
 
@@ -33,5 +35,11 @@ data class Path2PagedDocumentsMap(val pathList: List<Path2PagedDocuments> = empt
 
     fun <D> map(transformation: (String, Path2PagedDocuments) -> D): List<D> {
         return pathMap.map { transformation(it.key, it.value) }
+    }
+
+    override fun pathOf(pageDefinition: Id<PageDefinition>, document: Id<Document>): String? {
+        return pathList.find {
+            it.pageDefinition==pageDefinition && it.documents.contains(document)
+        }?.path
     }
 }

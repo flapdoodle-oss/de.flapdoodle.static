@@ -5,5 +5,8 @@ import de.flapdoodle.statik.pipeline.templates.wrapper.Renderable
 
 interface RenderEngine {
     fun mediaFiles(): List<FileSet>
-    fun render(template: String, renderable: Renderable): String
+    fun render(
+        template: String,
+        renderData: RenderData
+    ): String
 }
