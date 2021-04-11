@@ -1,9 +1,12 @@
 package de.flapdoodle.statik.pipeline.generate
 
+import de.flapdoodle.statik.config.Id
+import de.flapdoodle.statik.config.PageDefinition
 import de.flapdoodle.statik.config.Pages
 import de.flapdoodle.statik.config.Site
 import de.flapdoodle.statik.documents.Document
 import de.flapdoodle.statik.documents.DocumentSet
+import de.flapdoodle.statik.pipeline.templates.Paging
 import de.flapdoodle.statik.pipeline.templates.RenderData
 import de.flapdoodle.statik.pipeline.templates.RenderEngine
 import java.nio.file.Path
@@ -41,13 +44,28 @@ class DummyGenerator @Inject constructor(
             val pageDefinition = pages[entry.pageDefinition.id]
             val templateName = pageDefinition.template
 
+            val currentPage = entry.page
+
+            val paging = currentPage?.let {
+                val maxPage = pathMap.maxPageOf(entry.pageDefinition)!!
+
+                Paging(
+                    current = Paging.Page(currentPage, path),
+                    prev = pageFor(pathMap, entry.pageDefinition, if (currentPage>0) currentPage-1 else null),
+                    next = pageFor(pathMap, entry.pageDefinition, if (currentPage<maxPage) currentPage+1 else null),
+                    first = pageFor(pathMap, entry.pageDefinition, 0)!!,
+                    last = pageFor(pathMap, entry.pageDefinition, maxPage)!!
+                )
+            }
+
             val renderedContent = renderEngine.render(
                 templateName, RenderData(
                     url = path,
                     baseUrl = baseUrl,
                     site = site,
                     documents = matchingDocuments,
-                    pathOfDocumentInPage = pathMap
+                    pathOfDocumentInPage = pathMap,
+                    paging = paging
                 )
             )
             RendererPages.Page(path, renderedContent)
@@ -62,5 +80,15 @@ class DummyGenerator @Inject constructor(
 //        }
 
         return RendererPages(renderedDocuments)
+    }
+
+    private fun pageFor(pathMap: Path2PagedDocumentsMap, pageDefinition: Id<PageDefinition>, page: Int?): Paging.Page? {
+        if (page!=null) {
+            return Paging.Page(
+                index = page,
+                path = pathMap.pathOf(pageDefinition, page)!!
+            )
+        }
+        return null
     }
 }

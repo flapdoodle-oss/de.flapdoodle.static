@@ -4,6 +4,7 @@ import de.flapdoodle.statik.config.Id
 import de.flapdoodle.statik.config.PageDefinition
 import de.flapdoodle.statik.documents.Document
 import de.flapdoodle.statik.filetypes.Attributes
+import de.flapdoodle.statik.pipeline.generate.PathOfDocument
 import de.flapdoodle.statik.pipeline.generate.PathOfDocumentInPage
 
 data class DocumentWrapper(
@@ -26,6 +27,14 @@ data class DocumentWrapper(
     }
 
     fun pathToPage(pageDefinition: String?): String? {
+        if (pageDefinition!=null) {
+            // TODO -> relative links? wrapper zum Link erzeugen?
+            return pathOfDocumentInPage.pathOf(Id(pageDefinition, PageDefinition::class), Id(wrapped.id, Document::class))?.path
+        }
+        return null
+    }
+
+    fun pathTo(pageDefinition: String?): PathOfDocument? {
         if (pageDefinition!=null) {
             return pathOfDocumentInPage.pathOf(Id(pageDefinition, PageDefinition::class), Id(wrapped.id, Document::class))
         }

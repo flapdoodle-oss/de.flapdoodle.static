@@ -9,5 +9,6 @@ data class RenderData(
     val baseUrl: String,
     val site: Site,
     val documents: List<Document>,
-    val pathOfDocumentInPage: PathOfDocumentInPage
+    val pathOfDocumentInPage: PathOfDocumentInPage,
+    val paging: Paging?
 )

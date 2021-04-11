@@ -50,7 +50,8 @@ class DefaultPathMapGenerator(
                     pathMap = pathMap.add(
                         renderedPath,
                         Id.of(pageDefinition, PageDefinition::id),
-                        documents.map { it.second }
+                        documents.map { it.second },
+                        page
                     )
                 }
             }
