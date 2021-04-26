@@ -15,7 +15,8 @@ class CustomExtension : AbstractExtension() {
             "singleOrNull" to SingleElementFilter(true),
             "allWithKey" to HasKeyFilter(),
             "keyContains" to KeyContainsFilter(),
-            "mapAsList" to MapAsListFilter()
+            "mapAsList" to MapAsListFilter(),
+            "dump" to DumpFilter(),
         )
     }
 

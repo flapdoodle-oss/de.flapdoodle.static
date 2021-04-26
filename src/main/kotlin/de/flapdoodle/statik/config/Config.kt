@@ -38,6 +38,10 @@ data class Config(
                 fileName.endsWith(".yaml") -> Yaml.asTree(content)
                 else -> throw IllegalArgumentException("unsupported config file: $source")
             }
+            println("-----------------------")
+            println("config -> $configAsTree")
+            println("-----------------------")
+
             return parse(source.parent, configAsTree)
         }
     }
